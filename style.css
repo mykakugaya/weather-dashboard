@@ -1,0 +1,42 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    width: 100%;
+    background-color: rgb(4, 4, 54);
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+header h1 {
+    text-align: center;
+    color: white;
+}
+
+.container {
+    margin: 0 auto;
+    padding: 0 auto;
+}
+
+#search {
+    float: left;
+    padding: 10px;
+    background-color: rgb(216, 216, 216);
+}
+
+#cityInput {
+    width: 80%;
+}
+
+.searchBtn {
+}
+
+.searchBtn i {
+    color: white;
+}
+
+#searchHistory {
+}
+
