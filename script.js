@@ -1,92 +1,99 @@
 //If search history was stored, retrieve
 var pastSearches = localStorage.getItem("searches") ? JSON.parse(localStorage.getItem("searches")) : [];
 var today = moment().format("l");
+var APIkey = "7c39208aa3217ceafee7b802df1fe08b";
 
 //Show search history
 function showHistory() {
     for (i=0; i<pastSearches.length; i++) {
-        var li = $("<li>").hasClass("searchItem list-group-item list-group-item-action");
+        var li = $("<li>").addClass("list-group-item list-group-item-action");
+        li.attr("id", "pastSearch");
         li.text(pastSearches[i]);
-        $("#searchHistory").append(li);
+        $("#searchHistory").prepend(li);
     }
 }
 
 //When recent search is clicked, weather information shown
-$(".searchItem").on("click", function() {
-    var item = this.text();
-    showResult(item);
+$("#pastSearch").on("click", function() {
+    var item = $(this).text();
+    console.log(item);
+    getCurrent(item);
+    getForecast(item);
 })
 
-//Function to show data received from API
-function showResult(city) {
+function getCurrent(city) {
     //Request current weather data from API
-    var APIkey = "7c39208aa3217ceafee7b802df1fe08b";
     var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIkey;
     
     $.ajax({
         url: queryURL,
         method: "GET"
-    }).then(function(response1) {
-        console.log(response1);
+    }).then(function(response) {
+        console.log(queryURL);
+        console.log(response);
 
-        var icon = response1.weather.icon;
+        // var icon = response.weather.icon;
 
         //Show current weather information
-        var topDiv = $("<div>").innerHTML(`<h2>${city} (${today})</h2>`);
-        
-        var temp = $("<p>").text("Temperature: " + ((response1.main.temp-273.15)*(9/5)+32) + "°F");
+        var topDiv = $("<div>").addClass("current");
+        topDiv.html(`<h2>${city} (${today})</h2>`);
+
+        var temp = $("<p>").text("Temperature: " + ((response.main.temp-273.15)*(9/5)+32).toFixed(2) + "°F");
         topDiv.append(temp);
-        var humidity = $("<p>").text("Humidity: " + response1.main.humidity + "%");
+        var humidity = $("<p>").text("Humidity: " + response.main.humidity + "%");
         topDiv.append(humidity);
-        var windspd = $("<p>").text("Wind Speed: " + response1.wind.speed + "mph");
+        var windspd = $("<p>").text("Wind Speed: " + response.wind.speed + " mph");
         topDiv.append(windspd);
         var uvindex = $("<p>").text("UV Index: ");
         topDiv.append(uvindex);
 
-        $("cityResult").append(topDiv);        
+        $("#cityResult").append(topDiv);        
     })
+}
 
+function getForecast(city) {
     //Request forecast data from API
     var forecastURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + APIkey;
     
     $.ajax({ 
         url: forecastURL,
         method: "GET"
-    }).then(function(response2) {
-        console.log(response2);
-        var results = response2.list;
+    }).then(function(response) {
+        console.log(forecastURL);
+        console.log(response);
+        var results = response.list;
 
-        //Show 5-day forecast information
-        var botDiv = $("<div>").addClass("forecast").innerHTML("<h2>5-day Forecast:</h2>");
+        // Show 5-day forecast information
+        var botDiv = $("<div>").addClass("forecast");
+        botDiv.html("<h2>5-day Forecast:</h2>");
+        
+        //Obtain and show data for each day
         for (i=0; i<5; i++) {
-            //Obtain and show data for each day
-            var day = results.list[i];
+            var day = results[i];
             var dayResult = $("<div>").addClass("forecastDay");
-            var dayIcon = results.weather.icon;
-            var dayTemp = results.main.temp;
-            var dayHum = results.main.humidity;
+            var dayIcon = day.weather.icon;
+            var dayTemp = day.main.temp;
+            var dayHum = day.main.humidity;
         }
 
-        $("cityResult").append(botDiv);
+        $("#cityResult").append(botDiv);
     })
 }
 
-//Obtain city name input from searchbar
-$("#cityInput").on("keyup", function() {
-    var input = this.value.trim();
+//Click search button to request and show API data results
+$("button").on("click", function() {
+    event.preventDefault();
+    //Empty cityResult div for new city
+    $("#cityResult").empty();
+    // Obtain city name input from searchbar
+    var city = $("#cityInput").val();
+    getCurrent(city);
+    getForecast(city);
 
-    //Click search button to request API data
-    $(".searchBtn").on("submit", function() {
-        console.log("clicked");
-        event.preventDefault();
-        showResult(input);
-
-        //Add last search to search history and update
-        pastSearches.push(input);
-        console.log(pastSearches);
-        localStorage.setItem("searches", JSON.stringify(pastSearches));
-        showHistory();
-    })
+    //Add last search to search history and update
+    pastSearches.push(city);
+    localStorage.setItem("searches", JSON.stringify(pastSearches));
+    showHistory();
 })
 
 showHistory();

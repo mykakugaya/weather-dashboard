@@ -6,7 +6,6 @@ body {
 header {
     width: 100%;
     background-color: rgb(4, 4, 54);
-    margin-bottom: 20px;
     padding: 10px;
 }
 
@@ -17,26 +16,39 @@ header h1 {
 
 .container {
     margin: 0 auto;
-    padding: 0 auto;
+    padding: 0;
 }
 
 #search {
     float: left;
     padding: 10px;
-    background-color: rgb(216, 216, 216);
+    background-color: rgb(236, 235, 235);
 }
 
 #cityInput {
     width: 80%;
 }
 
-.searchBtn {
-}
-
 .searchBtn i {
     color: white;
 }
 
-#searchHistory {
+#cityResult {
+    float: left;
+}
+
+/*topDiv*/
+.current {
+
+}
+
+/*botDiv*/
+.forecast {
+
+}
+
+/*5 forecast boxes*/
+.forecastDay {
+
 }
 
