@@ -5,16 +5,17 @@ var APIkey = "7c39208aa3217ceafee7b802df1fe08b";
 
 //Show search history
 function showHistory() {
+    $("#searchHistory").empty();
     for (i=0; i<pastSearches.length; i++) {
         var li = $("<li>").addClass("list-group-item list-group-item-action");
-        li.attr("id", "pastSearch");
+        li.addClass("pastSearch");
         li.text(pastSearches[i]);
         $("#searchHistory").prepend(li);
     }
 }
 
 //When recent search is clicked, weather information shown
-$("#pastSearch").on("click", function() {
+$(".pastSearch").on("click", function() {
     var item = $(this).text();
     console.log(item);
     getCurrent(item);
@@ -36,7 +37,7 @@ function getCurrent(city) {
 
         //Show current weather information
         var topDiv = $("<div>").addClass("current");
-        topDiv.html(`<h2>${city} (${today})</h2>`);
+        topDiv.html(`<h2>${city.charAt(0).toUpperCase() + city.slice(1)} (${today})</h2>`);
 
         var temp = $("<p>").text("Temperature: " + ((response.main.temp-273.15)*(9/5)+32).toFixed(2) + "°F");
         topDiv.append(temp);
@@ -91,6 +92,11 @@ $("button").on("click", function() {
     getForecast(city);
 
     //Add last search to search history and update
+    var index = pastSearches.indexOf(city);
+    if (index > -1) {
+      pastSearches.splice(index, 1);
+    }
+
     pastSearches.push(city);
     localStorage.setItem("searches", JSON.stringify(pastSearches));
     showHistory();

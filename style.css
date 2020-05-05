@@ -15,8 +15,8 @@ header h1 {
 }
 
 .container {
-    margin: 0 auto;
-    padding: 0;
+    margin: 0;
+    padding: 0 auto;
 }
 
 #search {
@@ -35,20 +35,30 @@ header h1 {
 
 #cityResult {
     float: left;
+    padding: 15px;
 }
 
 /*topDiv*/
 .current {
+    border: rgb(236, 235, 235) solid 1px;
+    padding: 10px;
+    width: 100%;
+}
 
+.current h2 {
+    margin-bottom: 20px;
 }
 
 /*botDiv*/
 .forecast {
-
+    margin-top: 10px;
+    width: 100%;
 }
 
 /*5 forecast boxes*/
 .forecastDay {
-
+    background-color: rgb(0, 81, 255);
+    float: left;
+    color: white;
 }
 
