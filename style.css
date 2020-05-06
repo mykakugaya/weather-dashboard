@@ -4,7 +4,7 @@ body {
 }
 
 header {
-    width: 100%;
+    width: 100vw;
     background-color: rgb(4, 4, 54);
     padding: 10px;
 }
@@ -54,6 +54,11 @@ header h1 {
 /*botDiv*/
 .forecast {
     margin-top: 10px;
+    width: 100%;
+}
+
+ul {
+    overflow-wrap: normal;
     width: 100%;
 }
 

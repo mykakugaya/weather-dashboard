@@ -7,7 +7,7 @@ var APIkey = "7c39208aa3217ceafee7b802df1fe08b";
 function showHistory() {
     $("#searchHistory").empty();
     for (i=0; i<pastSearches.length; i++) {
-        var li = $("<li>").addClass("list-group-item list-group-item-action");
+        var li = $("<button>").addClass("list-group-item list-group-item-action");
         li.addClass("pastSearch");
         li.text(pastSearches[i]);
         $("#searchHistory").prepend(li);
@@ -70,25 +70,28 @@ function getForecast(city) {
         // Show 5-day forecast information
         var botDiv = $("<div>").addClass("forecast");
         botDiv.html("<h2>5-day Forecast:</h2>");
+        var ul = $("<ul>").addClass("list-group list-group-horizontal");
         
         //Obtain and show data for each day
         for (i=0; i<5; i++) {
             var day = results[i];
             //Each day forecast
-            var dayResult = $("<div>").addClass("forecastDay");
-            dayResult.text(today);
-            botDiv.append(dayResult);
+            var dayResult = $("<li>").addClass("forecastDay list-group-item");
+            var dateAhead = moment().add(i+1, "days").format("l");
+            dayResult.text(dateAhead);
+            ul.append(dayResult);
 
             var dayIcon = $("<img>").attr("src", "https://openweathermap.org/img/wn/" + day.weather[0].icon + ".png" );
             dayResult.append(dayIcon);
 
-            var dayTemp = $("<p>").text("Temp: " + ((day.main.temp-273.15)*(9/5)+32).toFixed(2));
+            var dayTemp = $("<p>").text("Temp: " + ((day.main.temp-273.15)*(9/5)+32).toFixed(2) + "°F");
             dayResult.append(dayTemp);
 
-            var dayHum = $("<p>").text("Humidity: " + day.main.humidity);
+            var dayHum = $("<p>").text("Humidity: " + day.main.humidity + "%");
             dayResult.append(dayHum);
         }
 
+        botDiv.append(ul);
         $("#cityResult").append(botDiv);
     })
 }
