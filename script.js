@@ -3,25 +3,28 @@ var pastSearches = localStorage.getItem("searches") ? JSON.parse(localStorage.ge
 var today = moment().format("l");
 var APIkey = "7c39208aa3217ceafee7b802df1fe08b";
 
-//Show search history
 function showHistory() {
     $("#searchHistory").empty();
+
+    //Show search history
     for (i=0; i<pastSearches.length; i++) {
         var li = $("<button>").addClass("list-group-item list-group-item-action");
-        li.addClass("pastSearch");
+        li.attr("id", "pastSearch");
         li.text(pastSearches[i]);
         $("#searchHistory").prepend(li);
     }
-}
 
-//When recent search is clicked, weather information shown
-$(".pastSearch").on("click", function() {
-    var item = $(this).text();
-    console.log(item);
-    getCurrent(item);
-    getForecast(item);
-    //put item at top of search history?
-})
+    //When recent search is clicked, weather information shown
+    $("#pastSearch").on("click", function() {
+        $("#cityResult").empty();
+
+        var item = $(this).text();
+        console.log(item);
+        getCurrent(item);
+        getForecast(item);
+        //put item at top of search history?
+    })
+}
 
 function getCurrent(city) {
     //Request current weather data from API
@@ -33,8 +36,6 @@ function getCurrent(city) {
     }).then(function(response) {
         console.log(queryURL);
         console.log(response);
-
-        // var icon = response.weather.icon;
 
         //Show current weather information
         var topDiv = $("<div>").addClass("current");
@@ -48,10 +49,25 @@ function getCurrent(city) {
         topDiv.append(humidity);
         var windspd = $("<p>").text("Wind Speed: " + response.wind.speed + " mph");
         topDiv.append(windspd);
-        var uvindex = $("<p>").text("UV Index: ");
-        topDiv.append(uvindex);
 
-        $("#cityResult").append(topDiv);        
+        $("#cityResult").append(topDiv);
+        
+        //separate ajax call for UV data
+        var lat = response.coord.lat;
+        var lon = response.coord.lon;
+        var UVurl = "http://api.openweathermap.org/data/2.5/uvi?appid=" + APIkey + "&lat=" + lat + "&lon=" + lon;
+
+        $.ajax({
+            url: UVurl,
+            method: "GET"
+        }).then(function(UVresponse) {
+            console.log(UVurl);
+            console.log(UVresponse);
+            var uvIndex = $("<div>").html("UV index: " + UVresponse.value);
+            topDiv.append(uvIndex);
+
+
+        })
     })
 }
 
@@ -102,7 +118,7 @@ $("button").on("click", function() {
     //Empty cityResult div for new city
     $("#cityResult").empty();
     // Obtain city name input from searchbar
-    var city = $("#cityInput").val().toLowerCase();
+    var city = $("#cityInput").val();
     getCurrent(city);
     getForecast(city);
 
