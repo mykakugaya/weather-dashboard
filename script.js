@@ -20,6 +20,7 @@ $(".pastSearch").on("click", function() {
     console.log(item);
     getCurrent(item);
     getForecast(item);
+    //put item at top of search history?
 })
 
 function getCurrent(city) {
@@ -37,8 +38,10 @@ function getCurrent(city) {
 
         //Show current weather information
         var topDiv = $("<div>").addClass("current");
-        topDiv.html(`<h2>${city.charAt(0).toUpperCase() + city.slice(1)} (${today})</h2>`);
-
+        var icon = $("<img>").attr("src", "https://openweathermap.org/img/wn/" + response.weather[0].icon + ".png");
+        topDiv.html(`<h2>${city.charAt(0).toUpperCase() + city.slice(1)} (${today}) </h2>`);
+        topDiv.append(icon);
+        
         var temp = $("<p>").text("Temperature: " + ((response.main.temp-273.15)*(9/5)+32).toFixed(2) + "°F");
         topDiv.append(temp);
         var humidity = $("<p>").text("Humidity: " + response.main.humidity + "%");
@@ -71,10 +74,19 @@ function getForecast(city) {
         //Obtain and show data for each day
         for (i=0; i<5; i++) {
             var day = results[i];
+            //Each day forecast
             var dayResult = $("<div>").addClass("forecastDay");
-            var dayIcon = day.weather.icon;
-            var dayTemp = day.main.temp;
-            var dayHum = day.main.humidity;
+            dayResult.text(today);
+            botDiv.append(dayResult);
+
+            var dayIcon = $("<img>").attr("src", "https://openweathermap.org/img/wn/" + day.weather[0].icon + ".png" );
+            dayResult.append(dayIcon);
+
+            var dayTemp = $("<p>").text("Temp: " + ((day.main.temp-273.15)*(9/5)+32).toFixed(2));
+            dayResult.append(dayTemp);
+
+            var dayHum = $("<p>").text("Humidity: " + day.main.humidity);
+            dayResult.append(dayHum);
         }
 
         $("#cityResult").append(botDiv);
@@ -87,7 +99,7 @@ $("button").on("click", function() {
     //Empty cityResult div for new city
     $("#cityResult").empty();
     // Obtain city name input from searchbar
-    var city = $("#cityInput").val();
+    var city = $("#cityInput").val().toLowerCase();
     getCurrent(city);
     getForecast(city);
 
