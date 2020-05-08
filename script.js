@@ -7,21 +7,32 @@ function showHistory() {
     $("#searchHistory").empty();
 
     //Show search history
-    for (i=0; i<pastSearches.length; i++) {
-        var li = $("<button>").addClass("list-group-item list-group-item-action");
-        li.attr("id", "pastSearch");
+    for (let i=0; i<pastSearches.length; i++) {
+        var li = $("<button>").addClass("list-group-item list-group-item-action pastSearch");
         li.text(pastSearches[i]);
         $("#searchHistory").prepend(li);
     }
 
-    //When recent search is clicked, weather information shown
-    $("#pastSearch").on("click", function() {
+    //When a recent search is clicked, weather information shown
+    $(".pastSearch").on("click", function() {
         $("#cityResult").empty();
+        // <div class="col-sm-3">
+        //     <h3>something</h3>
+        // </div>
+        // <div class="col-sm-1 no-gutter d-flex start">
+        //     <img></img>
+        // </div>
 
         var item = $(this).text();
         console.log(item);
         getCurrent(item);
         getForecast(item);
+        // $("#cityResult").empty();
+
+        // var item = $(this).text();
+        // console.log(item);
+        // getCurrent(item);
+        // getForecast(item);
         //put item at top of search history?
     })
 }
@@ -39,9 +50,13 @@ function getCurrent(city) {
 
         //Show current weather information
         var topDiv = $("<div>").addClass("current");
+
+        var cityDiv = $("<div>").addClass("nameDateIcon");
         var icon = $("<img>").attr("src", "https://openweathermap.org/img/wn/" + response.weather[0].icon + ".png");
-        topDiv.html(`<h2>${city.charAt(0).toUpperCase() + city.slice(1)} (${today}) </h2>`);
-        topDiv.append(icon);
+        cityDiv.html(`<h2>${city.charAt(0).toUpperCase() + city.slice(1)} (${today}) </h2>`);
+        
+        cityDiv.append(icon);
+        topDiv.append(cityDiv);
         
         var temp = $("<p>").text("Temperature: " + ((response.main.temp-273.15)*(9/5)+32).toFixed(2) + "°F");
         topDiv.append(temp);
