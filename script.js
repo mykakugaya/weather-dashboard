@@ -5,6 +5,7 @@ var APIkey = "7c39208aa3217ceafee7b802df1fe08b";
 
 function showHistory() {
     $("#searchHistory").empty();
+    $("#cityResult").empty();
 
     //Show search history
     for (let i=0; i<pastSearches.length; i++) {
@@ -13,7 +14,6 @@ function showHistory() {
         $("#searchHistory").prepend(li);
     }
 
-    $("#cityResult").empty();
     getCurrent(pastSearches[pastSearches.length-1]);
     getForecast(pastSearches[pastSearches.length-1]);
 
@@ -134,8 +134,6 @@ $("button").on("click", function() {
     $("#cityResult").empty();
     // Obtain city name input from searchbar
     var city = $("#cityInput").val();
-    getCurrent(city);
-    getForecast(city);
 
     //Add last search to search history and update
     var index = pastSearches.indexOf(city);
