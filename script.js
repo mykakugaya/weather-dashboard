@@ -13,27 +13,18 @@ function showHistory() {
         $("#searchHistory").prepend(li);
     }
 
+    $("#cityResult").empty();
+    getCurrent(pastSearches[pastSearches.length-1]);
+    getForecast(pastSearches[pastSearches.length-1]);
+
+
     //When a recent search is clicked, weather information shown
     $(".pastSearch").on("click", function() {
         $("#cityResult").empty();
-        // <div class="col-sm-3">
-        //     <h3>something</h3>
-        // </div>
-        // <div class="col-sm-1 no-gutter d-flex start">
-        //     <img></img>
-        // </div>
 
         var item = $(this).text();
-        console.log(item);
         getCurrent(item);
         getForecast(item);
-        // $("#cityResult").empty();
-
-        // var item = $(this).text();
-        // console.log(item);
-        // getCurrent(item);
-        // getForecast(item);
-        //put item at top of search history?
     })
 }
 
@@ -78,10 +69,19 @@ function getCurrent(city) {
         }).then(function(UVresponse) {
             console.log(UVurl);
             console.log(UVresponse);
-            var uvIndex = $("<div>").html("UV index: " + UVresponse.value);
-            topDiv.append(uvIndex);
-
-
+            var uvIndexDiv = $("<div>").html("UV index: ");
+            var uvIndexVal = $("<div>").html(UVresponse.value);
+            if (UVresponse.value>8) {
+                uvIndexVal.addClass("UVsevere rounded");
+            }
+            else if (UVresponse.value>3) {
+                uvIndexVal.addClass("UVmoderate rounded");
+            }
+            else {
+                uvIndexVal.addClass("UVfavorable rounded");
+            }
+            uvIndexDiv.append(uvIndexVal);
+            topDiv.append(uvIndexDiv);
         })
     })
 }
@@ -144,6 +144,12 @@ $("button").on("click", function() {
     }
 
     pastSearches.push(city);
+    localStorage.setItem("searches", JSON.stringify(pastSearches));
+    showHistory();
+})
+
+$("#clearBtn").on("click", function() {
+    pastSearches = [];
     localStorage.setItem("searches", JSON.stringify(pastSearches));
     showHistory();
 })
