@@ -30,7 +30,7 @@ function showHistory() {
 
 function getCurrent(city) {
     //Request current weather data from API
-    var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIkey;
+    var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIkey;
     
     $.ajax({
         url: queryURL,
@@ -61,7 +61,7 @@ function getCurrent(city) {
         //separate ajax call for UV data
         var lat = response.coord.lat;
         var lon = response.coord.lon;
-        var UVurl = "http://api.openweathermap.org/data/2.5/uvi?appid=" + APIkey + "&lat=" + lat + "&lon=" + lon;
+        var UVurl = "https://api.openweathermap.org/data/2.5/uvi?appid=" + APIkey + "&lat=" + lat + "&lon=" + lon;
 
         $.ajax({
             url: UVurl,
@@ -88,7 +88,7 @@ function getCurrent(city) {
 
 function getForecast(city) {
     //Request forecast data from API
-    var forecastURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + APIkey;
+    var forecastURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + APIkey;
     
     $.ajax({ 
         url: forecastURL,
